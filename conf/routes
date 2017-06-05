@@ -1,0 +1,18 @@
+
+# Users
+
+GET     /users                      controllers.UserController.index(page: Int)
+
+GET     /users/:id                  controllers.UserController.show(id: Long)
+
+POST    /users                      controllers.UserController.create
+
+POST    /users/search               controllers.UserController.search
+
+# Authentication
+
+POST    /login                      controllers.AuthenticationController.login
+
+# Assets (prefix must match play.assets.urlPrefix)
+GET     /assets/*file               controllers.Assets.at(file)
+GET     /versionedAssets/*file      controllers.Assets.versioned(file)
