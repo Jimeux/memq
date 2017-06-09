@@ -14,8 +14,8 @@ class Initializer @Inject()(
     Logger.debug("Beginning Dev mode initialisation")
 
     Logger.debug("Inserting user seeds...")
-    userRepository.save(User.createFromData(RegistrationData("Jim", "pass")))
-    userRepository.save(User.createFromData(RegistrationData("Mooba", "pass")))
+    userRepository.save(User.fromRegistrationData(RegistrationData("Jim", "pass")))
+    userRepository.save(User.fromRegistrationData(RegistrationData("Mooba", "pass")))
   }
 
 }

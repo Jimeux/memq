@@ -1,11 +1,10 @@
-/*************
-  * Settings *
-  ************/
+/*+**********+
+  + Settings +
+  +***********/
 lazy val commonSettings = Seq(
   organization := "io.memq",
   scalacOptions := Seq(
-    "-encoding",
-    "UTF-8",
+    "-encoding", "UTF-8",
     "-target:jvm-1.8",
     "-deprecation",
     "-feature",
@@ -16,19 +15,22 @@ lazy val commonSettings = Seq(
   )
 )
 
-/*****************
-  * Dependencies *
-  ****************/
+/*+**************+
+  + Dependencies +
+  +***************/
 lazy val playDependencies = Seq(
   filters,
   guice,
   "com.typesafe.play" % "play-slick_2.12" % "3.0.0-RC1",
+  "com.typesafe.play" %% "play-slick-evolutions" % "3.0.0-RC1",
   "com.typesafe.play" %% "play-json" % "2.6.0-M7"
 )
 
 lazy val thirdPartyDependencies = Seq(
   "org.postgresql" % "postgresql" % "9.4.1212",
-  "org.typelevel" %% "cats" % "0.9.0"
+  "org.typelevel" %% "cats" % "0.9.0",
+  "com.pauldijou" %% "jwt-core" % "0.12.1",
+  "org.bouncycastle" % "bcpkix-jdk15on" % "1.57"
 )
 
 lazy val testDependencies = Seq(
@@ -37,9 +39,9 @@ lazy val testDependencies = Seq(
 
 lazy val rootDependencies = playDependencies ++ thirdPartyDependencies ++ testDependencies
 
-/*****************
-  * Root project *
-  ****************/
+/*+**************+
+  + Root project +
+  +***************/
 lazy val root = (project in file("."))
   .enablePlugins(Play)
   .settings(
@@ -50,9 +52,9 @@ lazy val root = (project in file("."))
     scalacOptions += "-Ypartial-unification"
   )
 
-/************************
-  * Performance project *
-  ***********************/
+/*+*********************+
+  + Performance project +
+  +**********************/
 lazy val performance = (project in file("performance"))
   .enablePlugins(GatlingPlugin)
   .settings(

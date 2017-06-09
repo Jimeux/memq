@@ -6,7 +6,7 @@ import controllers.UserForms._
 import integration._
 import play.api.mvc._
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.ExecutionContext
 
 class UserController @Inject() (
   components: ControllerComponents,

@@ -5,13 +5,11 @@ import java.time.LocalDateTime
 import domain.UserData.RegistrationData
 import play.api.libs.json._
 
-import scala.util.Random
-
 case class User(
   id: Option[Long],
   username: String,
   password: String,
-  token: String,
+  token: Option[String],
   createdAt: LocalDateTime,
   modified: LocalDateTime
 ) extends Entity with Timestamps
@@ -31,11 +29,9 @@ object User {
   final val usernameValidations = text(minLength = 5, maxLength = 100)
   final val passwordValidations = text(minLength = 6, maxLength = 120)
 
-  def createFromData(data: RegistrationData): User = {
-    // TODO: Rethink this
-    val token = Random.alphanumeric.take(50).mkString
+  def fromRegistrationData(data: RegistrationData): User = {
     val now = LocalDateTime.now()
-    User(None, data.username, data.password, token, now, now)
+    User(None, data.username, data.password, None, now, now)
   }
 
 }

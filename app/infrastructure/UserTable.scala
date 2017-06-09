@@ -9,7 +9,7 @@ import slick.jdbc.PostgresProfile.api._
 class UserTable(tag: Tag) extends SlickTable[User](tag, "users") {
   def username  = column[String]("username")
   def password  = column[String]("password")
-  def token     = column[String]("token")
+  def token     = column[Option[String]]("token")
   def createdAt = column[LocalDateTime]("created_at")
   def modified  = column[LocalDateTime]("modified")
 
