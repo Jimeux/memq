@@ -26,10 +26,23 @@ lazy val playDependencies = Seq(
 )
 
 lazy val thirdPartyDependencies = Seq(
+
+  // Macwire (Dependency Injection)
+  "com.softwaremill.macwire" %% "macros" % "2.3.0" % Provided,
+  "com.softwaremill.macwire" %% "macrosakka" % "2.3.0" % Provided,
+  "com.softwaremill.macwire" %% "util" % "2.3.0",
+  "com.softwaremill.macwire" %% "proxy" % "2.3.0",
+
+  // Database Driver
   "org.postgresql" % "postgresql" % "9.4.1212",
+
+  // Cats (Functional Programming)
   "org.typelevel" %% "cats" % "0.9.0",
+
+  // JWT (Secure Tokens)
   "com.pauldijou" %% "jwt-core" % "0.12.1",
   "org.bouncycastle" % "bcpkix-jdk15on" % "1.57"
+
 )
 
 lazy val testDependencies = Seq(

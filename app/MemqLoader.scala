@@ -32,23 +32,20 @@ class AppComponents(context: Context)
     with SlickComponents
     with controllers.AssetsComponents {
 
-  override lazy val httpFilters: Seq[EssentialFilter] = Seq(securityHeadersFilter, allowedHostsFilter)
+  import com.softwaremill.macwire._
 
-  lazy val db: JdbcBackend#DatabaseDef = slickApi.dbConfig[JdbcProfile](DbName("default")).db
+  override lazy val httpFilters = Seq(securityHeadersFilter, allowedHostsFilter)
 
-  lazy val userRepository: UserRepository = new UserRepository(db, executionContext)
-  lazy val authenticationService: AuthenticationService = new AuthenticationService(userRepository, messagesApi, configuration, executionContext)
-  lazy val userService: UserService = new UserService(userRepository, messagesApi, authenticationService, executionContext)
-  lazy val authenticatedAction: AuthenticatedAction = new AuthenticatedAction(playBodyParsers, authenticationService, executionContext)
+  lazy val db = slickApi.dbConfig[JdbcProfile](DbName("default")).db
 
-  lazy val userController: UserController = new UserController(controllerComponents, userService, authenticatedAction, executionContext)
-  lazy val authenticationController: AuthenticationController = new AuthenticationController(controllerComponents, authenticationService, authenticatedAction, executionContext)
+  lazy val userRepository = wire[UserRepository]
+  lazy val authenticationService = wire[AuthenticationService]
+  lazy val userService = wire[UserService]
+  lazy val authenticatedAction = wire[AuthenticatedAction]
 
-  lazy val router: Routes = new Routes(
-    httpErrorHandler,
-    userController,
-    authenticationController,
-    assets
-  )
+  lazy val userController = wire[UserController]
+  lazy val authenticationController = wire[AuthenticationController]
+
+  lazy val router = wire[Routes]
 
 }

@@ -17,7 +17,7 @@ class AuthenticatedRequest[A](
   */
 class AuthenticatedAction(
   parsers: PlayBodyParsers,
-  authenticationService: AuthenticationService,
+  authenticationService: AuthenticationService)(
   implicit val executionContext: ExecutionContext
 ) extends ActionBuilder[AuthenticatedRequest, AnyContent] {
 
