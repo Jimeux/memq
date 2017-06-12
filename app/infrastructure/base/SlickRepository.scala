@@ -5,20 +5,18 @@ import java.sql.SQLTransientConnectionException
 import domain._
 import org.postgresql.util.PSQLException
 import play.api.Logger
-import play.api.db.slick.HasDatabaseConfigProvider
-import slick.jdbc.JdbcProfile
+import slick.jdbc.PostgresProfile.api._
 import slick.lifted.CompiledFunction
 
 import scala.concurrent.{ExecutionContext, Future}
 
-trait SlickRepository[T <: SlickTable[E], E <: Entity]
-  extends HasDatabaseConfigProvider[JdbcProfile] {
+trait SlickRepository[T <: SlickTable[E], E <: Entity] {
 
-  import dbConfig.profile.api._
+  type DBResult[R] = Future[Either[DBError, R]]
 
   implicit val executionContext: ExecutionContext
 
-  type DBResult[R] = Future[Either[DBError, R]]
+  protected val db: Database
 
   val table: TableQuery[T]
 

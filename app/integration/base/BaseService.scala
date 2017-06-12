@@ -1,6 +1,6 @@
 package integration.base
 
-import domain.{ConnectionError, DBError, NotFoundError, UnhandledDBError}
+import domain._
 import infrastructure.base._
 import play.api.i18n.MessagesApi
 import play.api.libs.json._

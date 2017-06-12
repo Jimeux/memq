@@ -1,7 +1,5 @@
 package integration
 
-import javax.inject.{Inject, Singleton}
-
 import domain.User
 import domain.UserData.{AuthenticationData, RegistrationData, SearchData}
 import infrastructure.UserRepository
@@ -10,8 +8,7 @@ import play.api.i18n.MessagesApi
 
 import scala.concurrent.{ExecutionContext, Future}
 
-@Singleton
-class UserService @Inject()(
+class UserService(
   users: UserRepository,
   messages: MessagesApi,
   authenticationService: AuthenticationService,

@@ -1,21 +1,16 @@
 package infrastructure
 
-import javax.inject.{Inject, Singleton}
-
 import domain.User
 import domain.UserData.SearchData
 import infrastructure.base.SlickRepository
-import play.api.db.slick.DatabaseConfigProvider
+import slick.jdbc.PostgresProfile.api._
 
 import scala.concurrent.ExecutionContext
 
-@Singleton
-class UserRepository @Inject()(
-  val dbConfigProvider: DatabaseConfigProvider,
+class UserRepository(
+  protected val db: Database,
   implicit val executionContext: ExecutionContext
 ) extends SlickRepository[UserTable, User] {
-
-  import dbConfig.profile.api._
 
   val table = UserTable.table
 

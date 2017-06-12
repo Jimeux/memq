@@ -1,4 +1,3 @@
-import com.google.inject.Singleton
 import play.api.Logger
 import play.api.http.HttpErrorHandler
 import play.api.mvc.Results._
@@ -6,7 +5,7 @@ import play.api.mvc._
 
 import scala.concurrent.Future
 
-@Singleton
+//TODO: Integrate with MemqLoader
 class ErrorHandler extends HttpErrorHandler {
 
   def onClientError(request: RequestHeader, statusCode: Int, message: String) = {

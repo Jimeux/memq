@@ -2,12 +2,11 @@ package integration
 
 import java.security.spec.{ECPoint, ECPrivateKeySpec, ECPublicKeySpec}
 import java.security.{KeyFactory, PrivateKey, PublicKey}
-import javax.inject.{Inject, Singleton}
 
 import cats.data._
 import cats.implicits._
-import domain.{NotFoundError, User}
 import domain.UserData.AuthenticationData
+import domain.{NotFoundError, User}
 import infrastructure.UserRepository
 import integration.base._
 import org.bouncycastle.jce.ECNamedCurveTable
@@ -21,8 +20,7 @@ import play.api.libs.json._
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.Try
 
-@Singleton
-class AuthenticationService @Inject()(
+class AuthenticationService(
   users: UserRepository,
   messages: MessagesApi,
   configuration: Configuration,

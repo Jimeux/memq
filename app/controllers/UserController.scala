@@ -1,14 +1,12 @@
 package controllers
 
-import javax.inject.Inject
-
 import controllers.UserForms._
 import integration._
 import play.api.mvc._
 
 import scala.concurrent.ExecutionContext
 
-class UserController @Inject() (
+class UserController(
   components: ControllerComponents,
   userService: UserService,
   authenticated: AuthenticatedAction,

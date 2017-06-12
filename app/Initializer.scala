@@ -1,11 +1,10 @@
-import com.google.inject.{Inject, Singleton}
 import domain.User
 import domain.UserData.RegistrationData
 import infrastructure.UserRepository
 import play.api.{Environment, Logger, Mode}
 
-@Singleton
-class Initializer @Inject()(
+// TODO: Integrate with MemqLoader
+class Initializer(
   environment: Environment,
   userRepository: UserRepository
 ) {

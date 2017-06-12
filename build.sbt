@@ -20,7 +20,6 @@ lazy val commonSettings = Seq(
   +***************/
 lazy val playDependencies = Seq(
   filters,
-  guice,
   "com.typesafe.play" % "play-slick_2.12" % "3.0.0-RC1",
   "com.typesafe.play" %% "play-slick-evolutions" % "3.0.0-RC1",
   "com.typesafe.play" %% "play-json" % "2.6.0-M7"
@@ -49,6 +48,7 @@ lazy val root = (project in file("."))
     version := "1.0",
     scalaVersion := "2.12.1",
     libraryDependencies ++= rootDependencies,
+    routesGenerator := InjectedRoutesGenerator,
     scalacOptions += "-Ypartial-unification"
   )
 

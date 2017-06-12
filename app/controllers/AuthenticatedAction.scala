@@ -1,7 +1,5 @@
 package controllers
 
-import javax.inject.{Inject, Singleton}
-
 import domain.User
 import integration.AuthenticationService
 import play.api.mvc._
@@ -17,8 +15,7 @@ class AuthenticatedRequest[A](
   * An Action capable of authenticating a user
   * by a token value in the Authorization header.
   */
-@Singleton
-class AuthenticatedAction @Inject()(
+class AuthenticatedAction(
   parsers: PlayBodyParsers,
   authenticationService: AuthenticationService,
   implicit val executionContext: ExecutionContext
