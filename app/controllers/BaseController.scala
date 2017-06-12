@@ -36,7 +36,7 @@ abstract class BaseController(
     * @tparam T the data type containing the request data
     * @return an HTTP response
     */
-  protected def toResult[T](invalidForm: Form[T]): Future[Result] = {
+  protected def errorsToResult[T](invalidForm: Form[T]): Future[Result] = {
     // TODO: Consider using MessagesApi
     val errors = invalidForm.errors map (e => s"${e.key}: ${e.message}")
     Future.successful(NotAcceptable(Json.toJson(errors)))

@@ -20,7 +20,7 @@ class UserRepository @Inject()(
   val table = UserTable.table
 
   private lazy val findByTokenCompiled = Compiled { token: Rep[String] =>
-    table.filter(_.token === token)
+    table.filter(user => user.token.isDefined && user.token === token)
   }
 
   private lazy val findByCredentialsCompiled = Compiled { (username: Rep[String], password: Rep[String]) =>

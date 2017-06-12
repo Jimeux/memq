@@ -10,7 +10,7 @@ class UserControllerSpec extends PlaySpec with OneAppPerTest {
   "User" must {
 
     "have a token" in {
-      val token = "token"
+      val token = Some("token")
       userFactory.build(token = token).token mustBe token
     }
 

@@ -11,7 +11,7 @@ class UserFactory {
   def build(id: Option[Long] = Some(defaultId),
             username: String = s"Username$defaultId",
             password: String = s"Password$defaultId",
-            token: String = s"Token$defaultId",
+            token: Option[String] = Some(s"Token$defaultId"),
             createdAt: LocalDateTime = LocalDateTime.now,
             modified: LocalDateTime = LocalDateTime.now
   ): User = {

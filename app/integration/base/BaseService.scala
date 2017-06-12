@@ -1,5 +1,6 @@
 package integration.base
 
+import domain.{ConnectionError, DBError, NotFoundError, UnhandledDBError}
 import infrastructure.base._
 import play.api.i18n.MessagesApi
 import play.api.libs.json._
@@ -41,10 +42,10 @@ abstract class BaseService(
     */
   protected def toJsError(error: DBError): JsResponse = {
     error match {
-      case NotFoundError() => JsNotFound(msg("json.error.not_found"))
+      case NotFoundError => JsNotFound(msg("json.error.not_found"))
       case UniqueViolationError(field) => JsInvalid(msg("json.error.unique", field))
-      case ConnectionError() => JsUnknown(msg("json.error.connection"))
-      case UnhandledDBError() => JsUnknown(msg("json.error.unknown"))
+      case ConnectionError => JsUnknown(msg("json.error.connection"))
+      case UnhandledDBError => JsUnknown(msg("json.error.unknown"))
     }
   }
 

@@ -25,14 +25,14 @@ class UserController @Inject() (
 
   def create = Action.async(parse.json) { implicit request =>
     RegistrationForm.bindFromRequest fold (
-      invalidForm => toResult(invalidForm),
+      errorsToResult,
       userService.register(_) map toResult
     )
   }
 
   def search = authenticated.async(parse.json) { implicit request =>
     SearchForm.bindFromRequest fold (
-      invalidForm => toResult(invalidForm),
+      errorsToResult,
       userService.search(_) map toResult
     )
   }

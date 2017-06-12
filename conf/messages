@@ -6,3 +6,4 @@ json.error.unknown=An unknown error occurred.
 json.error.not_found=The specified entity was not found.
 json.error.connection=A connection error occurred. Please try again later.
 json.error.unique={0} is already taken (must be unique).
+json.error.unauthorized=The provided username or password was incorrect.

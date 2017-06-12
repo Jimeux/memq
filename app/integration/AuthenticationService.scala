@@ -6,10 +6,10 @@ import javax.inject.{Inject, Singleton}
 
 import cats.data._
 import cats.implicits._
-import domain.User
+import domain.{NotFoundError, User}
 import domain.UserData.AuthenticationData
 import infrastructure.UserRepository
-import integration.base.{BaseService, JsResponse}
+import integration.base._
 import org.bouncycastle.jce.ECNamedCurveTable
 import org.bouncycastle.jce.provider.BouncyCastleProvider
 import org.bouncycastle.jce.spec.ECNamedCurveSpec
@@ -37,19 +37,28 @@ class AuthenticationService @Inject()(
   private final val (privateKeyEC, publicKeyEC) = initialiseKeys
 
   def verifyToken(token: String): Future[Option[User]] =
-    validateToken(token) map (_ => users.findByToken(token) map (_.toOption)) getOrElse Future.successful(None)
+    validateToken(token) map { _ =>
+      users.findByToken(token) map (_.toOption)
+    } getOrElse Future.successful(None)
 
   def authenticate(data: AuthenticationData): Future[JsResponse] = {
-    val json = for {
+    val result = for {
       found <- EitherT(users.findByCredentials(data.username, data.password))
       updated = found.copy(token = Some(generateToken(found)))
       saved <- EitherT(users.update(updated))
-    } yield JsObject(Seq(
-      "token" -> JsString(saved.token orNull),
-      "user" -> Json.toJson(saved)
-    ))
+    } yield saved
 
-    json.value map (toResponse(_))
+    result.value map {
+      case Right(user) =>
+        JsSuccessful(JsObject(Seq(
+          "token" -> JsString(user.token.orNull),
+          "user" -> Json.toJson(user)
+        )))
+      case Left(NotFoundError) =>
+        JsUnauthorized(JsString(messages("json.error.unauthorized")))
+      case Left(error) =>
+        toJsError(error)
+    }
   }
 
   private def generateToken(user: User): String = {
