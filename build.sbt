@@ -27,21 +27,30 @@ lazy val playDependencies = Seq(
 
 lazy val thirdPartyDependencies = Seq(
 
-  // Macwire (Dependency Injection)
+  // Macwire (Dependency injection)
   "com.softwaremill.macwire" %% "macros" % "2.3.0" % Provided,
   "com.softwaremill.macwire" %% "macrosakka" % "2.3.0" % Provided,
   "com.softwaremill.macwire" %% "util" % "2.3.0",
   "com.softwaremill.macwire" %% "proxy" % "2.3.0",
 
-  // Database Driver
+  // Postgresql (Database driver)
   "org.postgresql" % "postgresql" % "9.4.1212",
 
-  // Cats (Functional Programming)
+  // Cats (Functional programming)
   "org.typelevel" %% "cats" % "0.9.0",
 
-  // JWT (Secure Tokens)
+  // JWT (Secure tokens)
   "com.pauldijou" %% "jwt-core" % "0.12.1",
-  "org.bouncycastle" % "bcpkix-jdk15on" % "1.57"
+  "org.bouncycastle" % "bcpkix-jdk15on" % "1.57",
+
+  // Simulacrum (Typeclass boilerplate)
+  "com.github.mpilquist" %% "simulacrum" % "0.10.0",
+
+  // Shapeless (Generic programming)
+  "com.chuusai" %% "shapeless" % "2.3.2",
+
+  // Nyaya (Random data generation)
+  "com.github.japgolly.nyaya" %% "nyaya-gen" % "0.8.1"
 
 )
 
@@ -50,6 +59,21 @@ lazy val testDependencies = Seq(
 )
 
 lazy val rootDependencies = playDependencies ++ thirdPartyDependencies ++ testDependencies
+
+lazy val metaMacroSettings: Seq[Def.Setting[_]] = Seq(
+  scalaVersion := "2.12.1",
+  resolvers += Resolver.sonatypeRepo("releases"),
+  resolvers += Resolver.bintrayRepo("scalameta", "maven"),
+  addCompilerPlugin("org.scalameta" % "paradise" % "3.0.0-M8" cross CrossVersion.full),
+  scalacOptions += "-Xplugin-require:macroparadise",
+  // temporary workaround for https://github.com/scalameta/paradise/issues/10
+  scalacOptions in (Compile, console) := Seq() // macroparadise plugin doesn't work in repl yet.
+)
+
+lazy val macros = (project in file("macros")).settings(
+  metaMacroSettings,
+  libraryDependencies += "org.scalameta" %% "scalameta" % "1.8.0"
+)
 
 /*+**************+
   + Root project +
@@ -64,6 +88,8 @@ lazy val root = (project in file("."))
     routesGenerator := InjectedRoutesGenerator,
     scalacOptions += "-Ypartial-unification"
   )
+  .settings(metaMacroSettings)
+  .dependsOn(macros)
 
 /*+*********************+
   + Performance project +

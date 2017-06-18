@@ -3,7 +3,6 @@ import domain.UserData.RegistrationData
 import infrastructure.UserRepository
 import play.api.{Environment, Logger, Mode}
 
-// TODO: Integrate with MemqLoader
 class Initializer(
   environment: Environment,
   userRepository: UserRepository

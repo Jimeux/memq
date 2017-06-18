@@ -4,11 +4,10 @@ import integration.{AuthenticationService, UserService}
 import play.api.ApplicationLoader.Context
 import play.api.db.slick.{DbName, SlickComponents}
 import play.api.i18n._
-import play.api.mvc.EssentialFilter
 import play.api.{Application, ApplicationLoader, BuiltInComponentsFromContext, LoggerConfigurator}
 import play.filters.HttpFiltersComponents
-import slick.jdbc.{JdbcBackend, JdbcProfile}
 import router.Routes
+import slick.jdbc.JdbcProfile
 
 class MemqLoader extends ApplicationLoader {
 
@@ -35,17 +34,27 @@ class AppComponents(context: Context)
   import com.softwaremill.macwire._
 
   override lazy val httpFilters = Seq(securityHeadersFilter, allowedHostsFilter)
+  override lazy val httpErrorHandler = new ErrorHandler
 
   lazy val db = slickApi.dbConfig[JdbcProfile](DbName("default")).db
 
   lazy val userRepository = wire[UserRepository]
+
   lazy val authenticationService = wire[AuthenticationService]
   lazy val userService = wire[UserService]
+
   lazy val authenticatedAction = wire[AuthenticatedAction]
 
   lazy val userController = wire[UserController]
   lazy val authenticationController = wire[AuthenticationController]
 
-  lazy val router = wire[Routes]
+  lazy val router: Routes = new Routes(
+    httpErrorHandler,
+    userController,
+    authenticationController,
+    assets
+  )
+
+  val initializer = wire[Initializer]
 
 }

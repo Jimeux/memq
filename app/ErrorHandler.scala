@@ -5,7 +5,6 @@ import play.api.mvc._
 
 import scala.concurrent.Future
 
-//TODO: Integrate with MemqLoader
 class ErrorHandler extends HttpErrorHandler {
 
   def onClientError(request: RequestHeader, statusCode: Int, message: String) = {
