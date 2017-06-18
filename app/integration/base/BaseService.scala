@@ -14,8 +14,8 @@ abstract class BaseService(
 
   implicit val ec = executionContext
 
-  final val DefaultPerPage = 2
-  final val DefaultOffset = (page: Int) => DefaultPerPage * page - DefaultPerPage
+  val DefaultPerPage = 2
+  final val PageOffset = (page: Int) => DefaultPerPage * page - DefaultPerPage
 
   /**
     * Converts an infrastructure result to a JSON response.

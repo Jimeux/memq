@@ -14,7 +14,7 @@ class AuthenticationController(
 ) extends BaseController(components, executionContext) {
 
   def login = Action.async(parse.json) { implicit request =>
-    AuthenticationForm.bindFromRequest fold(
+    AuthenticationForm.bindFromRequest fold (
       _ => Future.successful(Unauthorized),
       authenticationService.authenticate(_) map toResult
     )

@@ -27,6 +27,9 @@ class AuthenticationService(
   executionContext: ExecutionContext
 ) extends BaseService(messages, executionContext) {
 
+  private final val CurveName = "P-521"
+  private final val KeyAlgorithm = "ECDSA"
+
   private final val Expiration = configuration.get[Int]("jwt.expiration")
   private final val SParam = BigInt(configuration.get[String]("jwt.params.S"), 16)
   private final val XParam = BigInt(configuration.get[String]("jwt.params.X"), 16)
@@ -69,14 +72,15 @@ class AuthenticationService(
     Jwt.decode(token, publicKeyEC, Seq(JwtAlgorithm.ES512))
 
   private def initialiseKeys: (PrivateKey, PublicKey) = {
-    val curveParams = ECNamedCurveTable.getParameterSpec("P-521")
-    val curveSpec = new ECNamedCurveSpec("P-521", curveParams.getCurve, curveParams.getG, curveParams.getN, curveParams.getH)
+    val curveParams = ECNamedCurveTable.getParameterSpec(CurveName)
+    val curveSpec = new ECNamedCurveSpec(CurveName, curveParams.getCurve, curveParams.getG, curveParams.getN, curveParams.getH)
     val privateSpec = new ECPrivateKeySpec(SParam.underlying, curveSpec)
-    val publicSpec = new ECPublicKeySpec(new ECPoint(XParam.underlying, YParam.underlying), curveSpec)
+    val point = new ECPoint(XParam.underlying, YParam.underlying)
+    val publicSpec = new ECPublicKeySpec(point, curveSpec)
     val provider = new BouncyCastleProvider
 
-    val privateKeyEC = KeyFactory.getInstance("ECDSA", provider).generatePrivate(privateSpec)
-    val publicKeyEC = KeyFactory.getInstance("ECDSA", provider).generatePublic(publicSpec)
+    val privateKeyEC = KeyFactory.getInstance(KeyAlgorithm, provider).generatePrivate(privateSpec)
+    val publicKeyEC = KeyFactory.getInstance(KeyAlgorithm, provider).generatePublic(publicSpec)
 
     (privateKeyEC, publicKeyEC)
   }

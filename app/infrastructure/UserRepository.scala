@@ -18,8 +18,9 @@ class UserRepository(
     table.filter(user => user.token.isDefined && user.token === token)
   }
 
-  private lazy val findByCredentialsCompiled = Compiled { (username: Rep[String], password: Rep[String]) =>
-    table.filter(_.byCredentials(username, password))
+  private lazy val findByCredentialsCompiled = Compiled {
+    (username: Rep[String], password: Rep[String]) =>
+      table.filter(_.byCredentials(username, password))
   }
 
   private lazy val searchCompiled = Compiled { username: Rep[String] =>

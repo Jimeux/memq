@@ -18,7 +18,7 @@ class UserService(
   def find(id: Long): Future[JsResponse] = users.findOne(id) map (toResponse(_))
 
   def findAll(page: Int): Future[JsResponse] =
-    users.findAll(DefaultOffset(page), DefaultPerPage) map (toResponse(_))
+    users.findAll(PageOffset(page), DefaultPerPage) map (toResponse(_))
 
   def register(data: RegistrationData): Future[JsResponse] = {
     users.save(User.fromRegistrationData(data)) flatMap {
