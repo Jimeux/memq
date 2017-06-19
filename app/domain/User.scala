@@ -26,8 +26,8 @@ object User {
     "modified" -> user.modified
   )
 
-  final val usernameValidations = text(minLength = 5, maxLength = 100)
-  final val passwordValidations = text(minLength = 6, maxLength = 120)
+  final val usernameValidations = text(minLength = 4, maxLength = 100)
+  final val passwordValidations = text(minLength = 4, maxLength = 120)
 
   def fromRegistrationData(data: RegistrationData): User = {
     val now = LocalDateTime.now()

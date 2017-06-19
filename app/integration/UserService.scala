@@ -4,16 +4,17 @@ import domain.User
 import domain.UserData.{AuthenticationData, RegistrationData, SearchData}
 import infrastructure.UserRepository
 import integration.base.{BaseService, JsResponse}
-import play.api.i18n.MessagesApi
+import play.api.i18n.{Langs, MessagesApi}
 
 import scala.concurrent.{ExecutionContext, Future}
 
 class UserService(
   users: UserRepository,
+  langs: Langs,
   messages: MessagesApi,
   authenticationService: AuthenticationService,
   executionContext: ExecutionContext
-) extends BaseService(messages, executionContext) {
+) extends BaseService(langs, messages, executionContext) {
 
   def find(id: Long): Future[JsResponse] = users.findOne(id) map (toResponse(_))
 

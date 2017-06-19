@@ -14,7 +14,7 @@ import org.bouncycastle.jce.provider.BouncyCastleProvider
 import org.bouncycastle.jce.spec.ECNamedCurveSpec
 import pdi.jwt.{Jwt, JwtAlgorithm, JwtClaim}
 import play.api.Configuration
-import play.api.i18n.MessagesApi
+import play.api.i18n.{Langs, MessagesApi}
 import play.api.libs.json._
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -24,8 +24,9 @@ class AuthenticationService(
   users: UserRepository,
   messages: MessagesApi,
   configuration: Configuration,
+  langs: Langs,
   executionContext: ExecutionContext
-) extends BaseService(messages, executionContext) {
+) extends BaseService(langs, messages, executionContext) {
 
   private final val CurveName = "P-521"
   private final val KeyAlgorithm = "ECDSA"

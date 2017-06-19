@@ -36,7 +36,7 @@ class AppComponents(context: Context)
   override lazy val httpFilters = Seq(securityHeadersFilter, allowedHostsFilter)
   override lazy val httpErrorHandler = new ErrorHandler
 
-  lazy val db = slickApi.dbConfig[JdbcProfile](DbName("default")).db
+  lazy val db = slickApi.dbConfig[JdbcProfile](DbName("memq")).db
 
   lazy val userRepository = wire[UserRepository]
 

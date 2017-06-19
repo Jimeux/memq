@@ -22,7 +22,7 @@ lazy val playDependencies = Seq(
   filters,
   "com.typesafe.play" % "play-slick_2.12" % "3.0.0-RC1",
   "com.typesafe.play" %% "play-slick-evolutions" % "3.0.0-RC1",
-  "com.typesafe.play" %% "play-json" % "2.6.0-M7"
+  "com.typesafe.play" %% "play-json" % "2.6.0-RC2"
 )
 
 lazy val thirdPartyDependencies = Seq(
@@ -47,15 +47,14 @@ lazy val thirdPartyDependencies = Seq(
   "com.github.mpilquist" %% "simulacrum" % "0.10.0",
 
   // Shapeless (Generic programming)
-  "com.chuusai" %% "shapeless" % "2.3.2",
-
-  // Nyaya (Random data generation)
-  "com.github.japgolly.nyaya" %% "nyaya-gen" % "0.8.1"
+  "com.chuusai" %% "shapeless" % "2.3.2"
 
 )
 
 lazy val testDependencies = Seq(
-  "org.scalatestplus.play" %% "scalatestplus-play" % "3.0.0-RC1" % Test
+  "org.scalatestplus.play" %% "scalatestplus-play" % "3.0.0-RC1" % Test,
+  // Nyaya (Random data generation)
+  "com.github.japgolly.nyaya" %% "nyaya-gen" % "0.8.1" % Test
 )
 
 lazy val rootDependencies = playDependencies ++ thirdPartyDependencies ++ testDependencies

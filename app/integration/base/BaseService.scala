@@ -1,18 +1,19 @@
 package integration.base
 
 import domain._
-import infrastructure.base._
-import play.api.i18n.MessagesApi
+import play.api.i18n.{Lang, Langs, MessagesApi}
 import play.api.libs.json._
 
 import scala.concurrent.ExecutionContext
 
 abstract class BaseService(
+  langs: Langs,
   messages: MessagesApi,
   executionContext: ExecutionContext
 ) {
 
-  implicit val ec = executionContext
+  implicit val ec: ExecutionContext = executionContext
+  implicit val lang: Lang = langs.availables.head
 
   val DefaultPerPage = 2
   final val PageOffset = (page: Int) => DefaultPerPage * page - DefaultPerPage
