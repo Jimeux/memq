@@ -1,4 +1,4 @@
-package domain
+package domain.base
 
 import java.time.LocalDateTime
 

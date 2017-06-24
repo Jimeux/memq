@@ -1,7 +1,7 @@
 package controllers
 
-import domain.User
-import domain.UserData._
+import domain.user.UserData._
+import domain.user.User
 import play.api.data.Form
 import play.api.data.Forms._
 

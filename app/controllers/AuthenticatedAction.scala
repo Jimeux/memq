@@ -1,6 +1,6 @@
 package controllers
 
-import domain.User
+import domain.user.User
 import integration.AuthenticationService
 import play.api.mvc._
 

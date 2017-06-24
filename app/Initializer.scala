@@ -1,6 +1,5 @@
-import domain.User
-import domain.UserData.RegistrationData
-import infrastructure.UserRepository
+import domain.user._
+import domain.user.UserData.RegistrationData
 import play.api.{Environment, Logger, Mode}
 
 class Initializer(

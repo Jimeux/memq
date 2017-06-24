@@ -1,18 +1,21 @@
-package infrastructure
+package infrastructure.user
 
-import domain.User
-import domain.UserData.SearchData
+import domain.user.UserData.SearchData
+import domain.user._
 import infrastructure.base.SlickRepository
-import slick.jdbc.PostgresProfile.api._
+import slick.basic.DatabaseConfig
+import slick.jdbc.JdbcProfile
 
 import scala.concurrent.ExecutionContext
 
-class UserRepository(
-  protected val db: Database,
+final class SlickUserRepository(
+  protected val config: DatabaseConfig[JdbcProfile],
   implicit val executionContext: ExecutionContext
-) extends SlickRepository[UserTable, User] {
+) extends SlickRepository[UserTable, User] with UserRepository {
 
-  val table = UserTable.table
+  import config.profile.api._
+
+  override protected val table = UserTable.table
 
   private lazy val findByTokenCompiled = Compiled { token: Rep[String] =>
     table.filter(user => user.token.isDefined && user.token === token)
@@ -27,15 +30,15 @@ class UserRepository(
     table.filter(_.username.toLowerCase like username)
   }
 
-  def findByToken(token: String): DBResult[User] = runOptional {
+  override def findByToken(token: String): DBResult[User] = runOptional {
     findByTokenCompiled(token).result.headOption
   }
 
-  def findByCredentials(username: String, password: String): DBResult[User] = runOptional {
+  override def findByCredentials(username: String, password: String): DBResult[User] = runOptional {
     findByCredentialsCompiled(username, password).result.headOption
   }
 
-  def search(query: SearchData): DBResult[Seq[User]] = run {
+  override def search(query: SearchData): DBResult[Seq[User]] = run {
     searchCompiled(query.username.toLowerCase + "%").result
   }
 

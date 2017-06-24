@@ -2,11 +2,11 @@ package infrastructure.base
 
 import java.sql.SQLTransientConnectionException
 
-import domain._
+import domain.base._
 import org.postgresql.util.PSQLException
 import play.api.Logger
 
-object PostgresErrorHandler {
+object PostgresErrorHandler extends DBErrorHandler {
 
   /**
     * https://www.postgresql.org/docs/8.1/static/errcodes-appendix.html

@@ -5,9 +5,9 @@ import java.security.{KeyFactory, PrivateKey, PublicKey}
 
 import cats.data._
 import cats.implicits._
-import domain.UserData.AuthenticationData
-import domain.{NotFoundError, User}
-import infrastructure.UserRepository
+import domain.base.NotFoundError
+import domain.user._
+import domain.user.UserData.AuthenticationData
 import integration.base._
 import org.bouncycastle.jce.ECNamedCurveTable
 import org.bouncycastle.jce.provider.BouncyCastleProvider

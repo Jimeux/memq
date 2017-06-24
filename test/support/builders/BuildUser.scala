@@ -1,9 +1,9 @@
 package support.builders
 
 import java.time.LocalDateTime
-import nyaya.gen._
 
-import domain.User
+import domain.user.User
+import nyaya.gen._
 
 object BuildUser {
   def apply(id: Option[Long] = Some(Gen.positiveLong.sample),

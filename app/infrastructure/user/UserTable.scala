@@ -1,8 +1,8 @@
-package infrastructure
+package infrastructure.user
 
 import java.time.LocalDateTime
 
-import domain.User
+import domain.user._
 import infrastructure.base.SlickTable
 import slick.jdbc.PostgresProfile.api._
 

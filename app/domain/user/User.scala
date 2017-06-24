@@ -1,8 +1,9 @@
-package domain
+package domain.user
 
 import java.time.LocalDateTime
 
-import domain.UserData.RegistrationData
+import domain.base.{Entity, Timestamps}
+import domain.user.UserData.RegistrationData
 import play.api.libs.json._
 
 case class User(

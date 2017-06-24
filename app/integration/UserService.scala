@@ -1,8 +1,7 @@
 package integration
 
-import domain.User
-import domain.UserData.{AuthenticationData, RegistrationData, SearchData}
-import infrastructure.UserRepository
+import domain.user._
+import domain.user.UserData._
 import integration.base.{BaseService, JsResponse}
 import play.api.i18n.{Langs, MessagesApi}
 

@@ -1,6 +1,6 @@
 package integration.base
 
-import domain._
+import domain.base._
 import play.api.i18n.{Lang, Langs, MessagesApi}
 import play.api.libs.json._
 

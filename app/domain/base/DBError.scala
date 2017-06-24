@@ -1,4 +1,4 @@
-package domain
+package domain.base
 
 sealed trait DBError
 
