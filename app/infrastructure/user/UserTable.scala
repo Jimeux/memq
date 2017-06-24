@@ -6,7 +6,7 @@ import domain.user._
 import infrastructure.base.SlickTable
 import slick.jdbc.PostgresProfile.api._
 
-class UserTable(tag: Tag) extends SlickTable[User](tag, "users") {
+final class UserTable(tag: Tag) extends SlickTable[User](tag, "users") {
   def username  = column[String]("username")
   def password  = column[String]("password")
   def token     = column[Option[String]]("token")

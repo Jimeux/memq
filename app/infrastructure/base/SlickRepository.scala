@@ -1,6 +1,6 @@
 package infrastructure.base
 
-import domain.base.{DBErrorHandler, Entity, NotFoundError, Repository}
+import domain.base._
 import slick.basic.DatabaseConfig
 import slick.jdbc.{JdbcBackend, JdbcProfile}
 
@@ -8,35 +8,21 @@ import scala.concurrent.ExecutionContext
 
 trait SlickRepository[T <: SlickTable[E], E <: Entity] extends Repository[E] {
 
-  /**
-    * Necessary for running action combinators with custom functions (map, flatMap, etc.)
-    * @see http://slick.lightbend.com/doc/3.2.0/dbio.html#sequential-execution
-    */
   implicit val executionContext: ExecutionContext
 
-  /**
-    * Convert database-specific exceptions to domain-specific errors
-    */
+  /** Convert database-specific exceptions to domain-specific errors */
   protected val errorHandler: DBErrorHandler = PostgresErrorHandler
 
-  /**
-    * Must be overridden with database-specific Slick configuration
-    */
+  /** Must be overridden with database-specific Slick configuration */
   protected val config: DatabaseConfig[JdbcProfile]
 
-  /**
-    * The database instance to use for queries
-    */
+  /** The database instance to use for queries */
   protected val db: JdbcBackend#DatabaseDef = config.db
 
-  /**
-    * Import implicits and aliases from the profile in the specified config
-    */
+  /** Import implicits and aliases from the profile in the specified config */
   import config.profile.api._
 
-  /**
-    * Must be overridden with repository-specific TableQuery instance
-    */
+  /** Must be overridden with repository-specific TableQuery instance */
   protected val table: TableQuery[T]
 
 
@@ -77,10 +63,8 @@ trait SlickRepository[T <: SlickTable[E], E <: Entity] extends Repository[E] {
     * @return either the query result or a domain-specific error
     */
   protected def run[R](operation: DBIO[R]): DBResult[R] =
-    db run {
-      operation map (Right(_))
-    } recover {
-      case e: Exception => Left(errorHandler.toDBError(e))
+    (db run operation) map (Right(_)) recover {
+      case e: Exception => Left(errorHandler convert e)
     }
 
   /**
@@ -92,13 +76,11 @@ trait SlickRepository[T <: SlickTable[E], E <: Entity] extends Repository[E] {
     * @return either the query result if non-empty or a domain-specific error
     */
   protected def runOptional[R](operation: DBIO[Option[R]]): DBResult[R] =
-    db run {
-      operation map {
-        case Some(entity) => Right(entity)
-        case None => Left(NotFoundError)
-      }
+    (db run operation) map {
+      case Some(entity) => Right(entity)
+      case None => Left(NotFoundError)
     } recover {
-      case e: Exception => Left(errorHandler.toDBError(e))
+      case e: Exception => Left(errorHandler convert e)
     }
 
 }

@@ -17,7 +17,7 @@ object PostgresErrorHandler extends DBErrorHandler {
     */
   private final val UniqueFieldPattern = "(?s).*=\\((\\w+)\\).*".r
 
-  def toDBError(e: Exception): DBError = e match {
+  def convert(e: Exception): DBError = e match {
     case e: PSQLException if e.getSQLState == UniqueViolationCode =>
       Logger.debug(s"Handled UniqueViolationError caused by: ${e.getMessage}")
       UniqueViolationError(extractField(e.getMessage))
