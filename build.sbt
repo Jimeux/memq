@@ -20,9 +20,9 @@ lazy val commonSettings = Seq(
   +***************/
 lazy val playDependencies = Seq(
   filters,
-  "com.typesafe.play" % "play-slick_2.12" % "3.0.0-RC1",
-  "com.typesafe.play" %% "play-slick-evolutions" % "3.0.0-RC1",
-  "com.typesafe.play" %% "play-json" % "2.6.0-RC2"
+  "com.typesafe.play" % "play-slick_2.12" % "3.0.0",
+  "com.typesafe.play" %% "play-slick-evolutions" % "3.0.0",
+  "com.typesafe.play" %% "play-json" % "2.6.0"
 )
 
 lazy val thirdPartyDependencies = Seq(
