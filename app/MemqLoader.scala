@@ -3,7 +3,9 @@ import domain.user.UserRepository
 import infrastructure.user.SlickUserRepository
 import integration.{AuthenticationService, UserService}
 import play.api.ApplicationLoader.Context
-import play.api.db.slick.{DbName, SlickComponents}
+import play.api.db.evolutions.{DynamicEvolutions, EvolutionsComponents}
+import play.api.db.slick.evolutions.SlickEvolutionsComponents
+import play.api.db.slick.{DbName, DefaultSlickApi, SlickApi, SlickComponents}
 import play.api.i18n._
 import play.api.{Application, ApplicationLoader, BuiltInComponentsFromContext, LoggerConfigurator}
 import play.filters.HttpFiltersComponents
@@ -28,15 +30,19 @@ class MemqLoader extends ApplicationLoader {
 
 class AppComponents(context: Context)
   extends BuiltInComponentsFromContext(context)
+    with SlickComponents
+    with SlickEvolutionsComponents
+    with EvolutionsComponents
     with I18nComponents
     with HttpFiltersComponents
-    with SlickComponents
     with controllers.AssetsComponents {
 
   import com.softwaremill.macwire._
 
   override lazy val httpFilters = Seq(securityHeadersFilter, allowedHostsFilter)
   override lazy val httpErrorHandler = new ErrorHandler
+  override lazy val slickApi = new DefaultSlickApi(environment, configuration, applicationLifecycle)(executionContext)
+  override lazy val dynamicEvolutions: DynamicEvolutions = new DynamicEvolutions
 
   lazy val dbConfig: DatabaseConfig[JdbcProfile] = slickApi.dbConfig[JdbcProfile](DbName("memq"))
 
@@ -57,6 +63,13 @@ class AppComponents(context: Context)
     assets
   )
 
-  val initializer = wire[Initializer]
+  lazy val initializer = wire[Initializer]
+
+  def onStart() = {
+    applicationEvolutions
+    initializer
+  }
+
+  onStart()
 
 }
