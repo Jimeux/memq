@@ -5,7 +5,7 @@ import play.api.mvc._
 
 import scala.concurrent.Future
 
-class ErrorHandler extends HttpErrorHandler {
+class MemqErrorHandler extends HttpErrorHandler {
 
   def onClientError(request: RequestHeader, statusCode: Int, message: String) = {
     Future.successful(Status(statusCode)(s"A client error [code $statusCode] occurred: $message"))

@@ -20,7 +20,7 @@ import play.api.libs.json._
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.Try
 
-class AuthenticationService(
+final class AuthenticationService(
   users: UserRepository,
   messages: MessagesApi,
   configuration: Configuration,

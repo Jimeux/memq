@@ -1,8 +1,8 @@
-import domain.user._
 import domain.user.UserData.RegistrationData
+import domain.user._
 import play.api.{Environment, Logger, Mode}
 
-class Initializer(
+class MemqInitializer(
   environment: Environment,
   userRepository: UserRepository
 ) {
