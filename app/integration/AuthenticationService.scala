@@ -36,7 +36,7 @@ final class AuthenticationService(
   private final val XParam = BigInt(configuration.get[String]("jwt.params.X"), 16)
   private final val YParam = BigInt(configuration.get[String]("jwt.params.Y"), 16)
 
-  private final val (privateKeyEC, publicKeyEC) = initialiseKeys
+  private val (privateKeyEC, publicKeyEC) = initialiseKeys
 
   def verifyToken(token: String): Future[Option[User]] =
     validateToken(token) map { _ =>

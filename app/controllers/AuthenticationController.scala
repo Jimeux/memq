@@ -9,9 +9,8 @@ import scala.concurrent.{ExecutionContext, Future}
 class AuthenticationController(
   components: ControllerComponents,
   authenticationService: AuthenticationService,
-  authenticate: AuthenticatedAction,
-  implicit val executionContext: ExecutionContext
-) extends BaseController(components, executionContext) {
+  authenticate: AuthenticatedAction
+) extends BaseController(components) {
 
   def login = Action.async(parse.json) { implicit request =>
     AuthenticationForm.bindFromRequest fold (

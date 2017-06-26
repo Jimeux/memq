@@ -7,11 +7,10 @@ import play.api.mvc._
 import scala.concurrent.ExecutionContext
 
 class UserController(
-  components: ControllerComponents,
   userService: UserService,
-  authenticated: AuthenticatedAction,
-  executionContext: ExecutionContext
-) extends BaseController(components, executionContext) {
+  components: ControllerComponents,
+  authenticated: AuthenticatedAction
+) extends BaseController(components) {
 
   def index(page: Int) = Action.async(parse.default) { _ =>
     userService.findAll(page) map toResult

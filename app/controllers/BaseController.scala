@@ -8,11 +8,10 @@ import play.api.mvc._
 import scala.concurrent.{ExecutionContext, Future}
 
 abstract class BaseController(
-  components: ControllerComponents,
-  executionContext: ExecutionContext
+  components: ControllerComponents
 ) extends AbstractController(components) {
 
-  implicit val ec = executionContext
+  implicit val executionContext = components.executionContext
 
   /**
     * Convert a JSON representation of a response to an HTTP response.
