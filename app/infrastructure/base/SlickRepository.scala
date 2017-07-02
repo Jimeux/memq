@@ -25,34 +25,35 @@ trait SlickRepository[T <: SlickTable[E], E <: Entity] extends Repository[E] {
   /** Must be overridden with repository-specific TableQuery instance */
   protected val table: TableQuery[T]
 
+  implicit class GenericQueryExtensions(query: TableQuery[T]) {
+    lazy val save = query returning query
 
-  lazy protected val saveCompiled = table returning table
+    lazy val findOne = Compiled { id: Rep[Long] =>
+      query.filter(_.id === id)
+    }
 
-  lazy protected val findOneCompiled = Compiled { id: Rep[Long] =>
-    table.filter(_.id === id)
-  }
-
-  lazy protected val findPageCompiled = Compiled { (offset: ConstColumn[Long], limit: ConstColumn[Long]) =>
-    table.drop(offset).take(limit)
+    lazy val findAll = Compiled { (offset: ConstColumn[Long], limit: ConstColumn[Long]) =>
+      query.drop(offset).take(limit)
+    }
   }
 
   override def save(entity: E): DBResult[E] = run {
-    saveCompiled += entity
+    table.save += entity
   }
 
   override def update(entity: E): DBResult[E] = runOptional {
-    findOneCompiled(entity.id.get).update(entity) map {
+    table.findOne(entity.id.get).update(entity) map {
       case 0 => None // ID not found
       case _ => Some(entity)
     }
   }
 
   override def findOne(id: Long): DBResult[E] = runOptional {
-    findOneCompiled(id).result.headOption
+    table.findOne(id).result.headOption
   }
 
   override def findAll(offset: Long, limit: Long): DBResult[Seq[E]] = run {
-    findPageCompiled(offset, limit).result
+    table.findAll(offset, limit).result
   }
 
   /**

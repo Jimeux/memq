@@ -11,4 +11,6 @@ trait UserRepository extends Repository[User] {
 
   def search(query: SearchData): DBResult[Seq[User]]
 
+  def withAddress(offset: Long, limit: Long): DBResult[Seq[User]]
+
 }

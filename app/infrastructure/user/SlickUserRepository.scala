@@ -29,4 +29,11 @@ final class SlickUserRepository(
     table.search(query.username.toLowerCase + "%").result
   }
 
+  override def withAddress(offset: Long, limit: Long): DBResult[Seq[User]] = run {
+    table.findAllWithAddress(offset, limit).result map withAddress
+  }
+
+  private def withAddress(userAddresses: Seq[(User, Address)]): Seq[User] =
+    userAddresses map { case (u, a) => u.copy(address = Some(a)) }
+
 }

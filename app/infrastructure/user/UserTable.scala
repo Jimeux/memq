@@ -6,6 +6,7 @@ import domain.user._
 import infrastructure.base.SlickTable
 import infrastructure.base.ColumnMappers._
 import slick.jdbc.PostgresProfile.api._
+import slick.lifted.ProvenShape
 
 final class UserTable(tag: Tag) extends SlickTable[User](tag, "users") {
   def username: Rep[String] = column[String]("username")
@@ -14,17 +15,19 @@ final class UserTable(tag: Tag) extends SlickTable[User](tag, "users") {
   def createdAt: Rep[LocalDateTime] = column[LocalDateTime]("created_at")
   def modified: Rep[LocalDateTime] = column[LocalDateTime]("modified")
 
-  def * = (
-    id.?, username, password, token, createdAt, modified
-  ) <> ((User.apply _).tupled, User.unapply)
+  def address = foreignKey("user_address_fk", id, AddressTable.table)(_.userId)
 
-  def byCredentials(aUsername: Rep[String], aPassword: Rep[String]): Rep[Boolean] =
-    username === aUsername && password === aPassword
+  def * : ProvenShape[User] = (id.?, username, password, token, createdAt, modified) <> (pack, unpack)
+
+  type Row = (Option[Long], String, String, Option[String], LocalDateTime, LocalDateTime)
+
+  def pack(r: Row): User = User(r._1, r._2, r._3, r._4, r._5, r._6)
+
+  def unpack(u: User): Option[Row] = Some(u.id, u.username, u.password, u.token, u.createdAt, u.modified)
 
 }
 
 object UserTable {
-
   lazy val table: TableQuery[UserTable] = TableQuery[UserTable]
 
   implicit class QueryExtensions(users: TableQuery[UserTable]) {
@@ -38,6 +41,15 @@ object UserTable {
 
     lazy val search = Compiled { username: Rep[String] =>
       users.filter(_.username.toLowerCase like username)
+    }
+
+    lazy val findAllWithAddress = Compiled { (offset: ConstColumn[Long], limit: ConstColumn[Long]) =>
+      (for {
+        u <- table
+        a <- u.address
+      } yield (u, a))
+        .drop(offset)
+        .take(limit)
     }
   }
 

@@ -3,6 +3,8 @@
 
 GET     /users                      controllers.UserController.index(page: Int)
 
+GET     /users/addresses            controllers.UserController.addresses(page: Int)
+
 GET     /users/:id                  controllers.UserController.show(id: Long)
 
 POST    /users                      controllers.UserController.create

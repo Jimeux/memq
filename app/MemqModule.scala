@@ -1,14 +1,16 @@
 import com.softwaremill.macwire._
 import controllers.{AuthenticatedAction, AuthenticationController, UserController}
 import domain.user.UserRepository
-import infrastructure.user.SlickUserRepository
+import infrastructure.user.{SlickAddressRepository, SlickUserRepository}
 import integration.{AuthenticationService, UserService}
 import play.api.ApplicationLoader.Context
 import play.api.BuiltInComponentsFromContext
 import play.api.db.evolutions.{DynamicEvolutions, EvolutionsComponents}
 import play.api.db.slick.evolutions.SlickEvolutionsComponents
-import play.api.db.slick.{DbName, DefaultSlickApi, SlickComponents}
+import play.api.db.slick.{DbName, DefaultSlickApi, SlickApi, SlickComponents}
+import play.api.http.HttpErrorHandler
 import play.api.i18n.I18nComponents
+import play.api.mvc.EssentialFilter
 import play.filters.HttpFiltersComponents
 import router.Routes
 import slick.basic.DatabaseConfig
@@ -31,22 +33,23 @@ class MemqModule(context: Context)
     with HttpFiltersComponents
     with controllers.AssetsComponents {
 
-  override lazy val httpFilters = Seq(securityHeadersFilter, allowedHostsFilter)
-  override lazy val httpErrorHandler = new MemqErrorHandler
-  override lazy val slickApi = new DefaultSlickApi(environment, configuration, applicationLifecycle)(executionContext)
+  override lazy val httpFilters: Seq[EssentialFilter] = Seq(securityHeadersFilter, allowedHostsFilter)
+  override lazy val httpErrorHandler: HttpErrorHandler = new MemqErrorHandler
+  override lazy val slickApi: SlickApi = new DefaultSlickApi(environment, configuration, applicationLifecycle)(executionContext)
   override lazy val dynamicEvolutions: DynamicEvolutions = new DynamicEvolutions
 
   lazy val dbConfig: DatabaseConfig[JdbcProfile] = slickApi.dbConfig[JdbcProfile](DbName("memq"))
 
   lazy val userRepository: UserRepository = wire[SlickUserRepository]
+  lazy val addressRepository: SlickAddressRepository = wire[SlickAddressRepository]
 
-  lazy val authenticationService = wire[AuthenticationService]
-  lazy val userService = wire[UserService]
+  lazy val authenticationService: AuthenticationService = wire[AuthenticationService]
+  lazy val userService: UserService = wire[UserService]
 
-  lazy val authenticatedAction = wire[AuthenticatedAction]
+  lazy val authenticatedAction: AuthenticatedAction = wire[AuthenticatedAction]
 
-  lazy val userController = wire[UserController]
-  lazy val authenticationController = wire[AuthenticationController]
+  lazy val userController: UserController = wire[UserController]
+  lazy val authenticationController: AuthenticationController = wire[AuthenticationController]
 
   lazy val router: Routes = new Routes(
     httpErrorHandler,
@@ -55,7 +58,7 @@ class MemqModule(context: Context)
     assets
   )
 
-  lazy val initializer = wire[MemqInitializer]
+  lazy val initializer: MemqInitializer = wire[MemqInitializer]
 
   // Run Evolutions
   applicationEvolutions

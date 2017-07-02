@@ -4,7 +4,7 @@ import controllers.UserForms._
 import integration._
 import play.api.mvc._
 
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ExecutionContext, Future}
 
 class UserController(
   userService: UserService,
@@ -14,6 +14,10 @@ class UserController(
 
   def index(page: Int) = Action.async(parse.default) { _ =>
     userService.findAll(page) map toResult
+  }
+
+  def addresses(page: Int) = Action.async(parse.default) { a =>
+    userService.addresses(page) map toResult
   }
 
   def show(id: Long) = authenticated.async(parse.default) { _ =>
