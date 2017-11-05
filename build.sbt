@@ -11,7 +11,8 @@ lazy val commonSettings = Seq(
     "-unchecked",
     "-language:implicitConversions",
     "-language:postfixOps",
-    "-language:higherKinds"
+    "-language:higherKinds",
+    "-Xfatal-warnings"
   )
 )
 
@@ -20,9 +21,9 @@ lazy val commonSettings = Seq(
   +***************/
 lazy val playDependencies = Seq(
   filters,
-  "com.typesafe.play" %% "play-slick" % "3.0.0",
-  "com.typesafe.play" %% "play-slick-evolutions" % "3.0.0",
-  "com.typesafe.play" %% "play-json" % "2.6.0"
+  "com.typesafe.play" %% "play-slick" % "3.0.1",
+  "com.typesafe.play" %% "play-slick-evolutions" % "3.0.1",
+  "com.typesafe.play" %% "play-json" % "2.6.6"
 )
 
 lazy val thirdPartyDependencies = Seq(
@@ -37,10 +38,10 @@ lazy val thirdPartyDependencies = Seq(
   "org.postgresql" % "postgresql" % "9.4.1212",
 
   // Cats (Functional programming)
-  "org.typelevel" %% "cats" % "0.9.0",
+  "org.typelevel" %% "cats-core" % "1.0.0-RC1",
 
   // JWT (Secure tokens)
-  "com.pauldijou" %% "jwt-core" % "0.12.1",
+  "com.pauldijou" %% "jwt-core" % "0.14.1",
   "org.bouncycastle" % "bcpkix-jdk15on" % "1.57",
 
   // Simulacrum (Typeclass boilerplate)
@@ -52,27 +53,12 @@ lazy val thirdPartyDependencies = Seq(
 )
 
 lazy val testDependencies = Seq(
-  "org.scalatestplus.play" %% "scalatestplus-play" % "3.0.0-RC1" % Test,
+  "org.scalatestplus.play" %% "scalatestplus-play" % "3.1.2" % Test,
   // Nyaya (Random data generation)
   "com.github.japgolly.nyaya" %% "nyaya-gen" % "0.8.1" % Test
 )
 
 lazy val rootDependencies = playDependencies ++ thirdPartyDependencies ++ testDependencies
-
-lazy val metaMacroSettings: Seq[Def.Setting[_]] = Seq(
-  scalaVersion := "2.12.1",
-  resolvers += Resolver.sonatypeRepo("releases"),
-  resolvers += Resolver.bintrayRepo("scalameta", "maven"),
-  addCompilerPlugin("org.scalameta" % "paradise" % "3.0.0-M8" cross CrossVersion.full),
-  scalacOptions += "-Xplugin-require:macroparadise",
-  // temporary workaround for https://github.com/scalameta/paradise/issues/10
-  scalacOptions in (Compile, console) := Seq() // macroparadise plugin doesn't work in repl yet.
-)
-
-lazy val macros = (project in file("macros")).settings(
-  metaMacroSettings,
-  libraryDependencies += "org.scalameta" %% "scalameta" % "1.8.0"
-)
 
 /*+**************+
   + Root project +
@@ -82,25 +68,12 @@ lazy val root = (project in file("."))
   .settings(
     commonSettings,
     version := "1.0",
-    scalaVersion := "2.12.1",
+    scalaVersion := "2.12.3",
     libraryDependencies ++= rootDependencies,
+    dependencyOverrides ++= Seq(
+      "com.typesafe.akka" %% "akka-stream" % "2.5.4",
+      "com.typesafe.akka" %% "akka-actor" % "2.5.4"
+    ),
     routesGenerator := InjectedRoutesGenerator,
     scalacOptions += "-Ypartial-unification"
-  )
-  .settings(metaMacroSettings)
-  .dependsOn(macros)
-
-/*+*********************+
-  + Performance project +
-  +**********************/
-lazy val performance = (project in file("performance"))
-  .enablePlugins(GatlingPlugin)
-  .settings(
-    commonSettings,
-    scalaVersion := "2.11.8",
-    target in Gatling := new File("./reports"),
-    libraryDependencies ++= Seq(
-      "io.gatling.highcharts" % "gatling-charts-highcharts" % "2.2.5" % "test,it",
-      "io.gatling" % "gatling-test-framework" % "2.2.5" % "test,it"
-    )
   )

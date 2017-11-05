@@ -4,8 +4,6 @@ import controllers.UserForms._
 import integration._
 import play.api.mvc._
 
-import scala.concurrent.{ExecutionContext, Future}
-
 class UserController(
   userService: UserService,
   components: ControllerComponents,
